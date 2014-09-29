@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>How to Speak R</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link rel="stylesheet" media="all" href="HowToSpeakR_files/ioslides-13.5.1/fonts/fonts.css">
+
+  <link rel="stylesheet" media="all" href="HowToSpeakR_files/ioslides-13.5.1/theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="HowToSpeakR_files/ioslides-13.5.1/theme/css/phone.css">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'How to Speak R',
+                        useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+              },
+
+      // Author information
+      presenters: [
+            {
+        name: 'Ondrej Ivanic'
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+  </style>
+
+
+
+</head>
+
+<body style="opacity: 0">
+
+<slides>
+
+  <slide class="title-slide segue nobackground">
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+          </hgroup>
+  </slide>
+
+<slide class=''><hgroup><h2>The R language</h2></hgroup><article  id="the-r-language" class="flexbox vcenter">
+
+<img src="images/01_Rlang.png" width="750"/>
+
+<aside class='note'><section><ul>
+<li>in 1993</li>
+<li>get the books</li>
+<li>pick your favorite pages and put them into single book</li>
+<li>you get R language spec</li>
+<li>the result?</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>The R language</h2></hgroup><article  id="the-r-language-1" class="flexbox vcenter">
+
+<img src="images/02_Rlang.jpg" width="600"/>
+
+<aside class='note'><section><ul>
+<li>like this dog</li>
+<li>isn&#39;t it cute?</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>R fundamental styles</h2></hgroup><article  id="r-fundamental-styles">
+
+<ul>
+<li>Domain specific language (DSL)</li>
+<li>Designed for interactive use</li>
+<li>Functional and imperative</li>
+<li>Object oriented</li>
+<li>Lazy</li>
+<li>Vector / multidimensional language</li>
+</ul>
+
+<aside class='note'><section><ul>
+<li>DSL for statistics or analysing data</li>
+<li>language has shortcuts for ineractive use but they do not work in programms e.g. subset</li>
+<li>you can mix programming styles</li>
+<li>exverything is <code>Promise</code> and evalueted on the first use</li>
+<li>everything is vector or list</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Data Structures</h2></hgroup><article  id="data-structures">
+
+<ul>
+<li>0-dim a.k.a scalar: <strong>does not exist</strong></li>
+<li>1-dim: <strong>vector</strong> or <strong>list</strong></li>
+<li>2-dim: <strong>matrix</strong> (2D array) or <strong>data.frame</strong></li>
+<li><p>n-dim: <strong>array</strong></p></li>
+<li>vector / matrix / array: homogeneous (preferred)</li>
+<li><p>list / data.frame: heterogeneous</p></li>
+</ul>
+
+<aside class='note'><section><ul>
+<li>the first surprise; constant assignment creates vector (later)</li>
+<li>use the first ones if you can</li>
+<li>memory overhead around 40b per variable</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>matrix</h2></hgroup><article  id="matrix">
+
+<ul>
+<li>It is a structure / object: <code>c()</code> + metadata</li>
+<li>Filled by columns ( <code>by.row = FALSE</code> )</li>
+<li>Dimmensions stored as attributes</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>m &lt;- matrix(4:1, 2, 2)
+dump(&quot;m&quot;, &quot;&quot;)</pre>
+
+<pre >## m &lt;-
+## structure(c(4L, 3L, 2L, 1L), .Dim = c(2L, 2L))</pre>
+
+<aside class='note'><section><ul>
+<li><code>c()</code> creates vector</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>data.frame</h2></hgroup><article  id="data.frame">
+
+<ul>
+<li>It is a structure / object: <code>list()</code> + metadata</li>
+<li>Columnar data structure</li>
+<li>Row / Column names are stored as attributes</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>df &lt;- data.frame(x = 1:5, y = 5:1)
+dump(&quot;df&quot;, &quot;&quot;)</pre>
+
+<pre >## df &lt;-
+## structure(list(x = 1:5, y = c(5L, 4L, 3L, 2L, 1L)), .Names = c(&quot;x&quot;, 
+## &quot;y&quot;), row.names = c(NA, -5L), class = &quot;data.frame&quot;)</pre>
+
+<aside class='note'><section><ul>
+<li>similar to matrix</li>
+<li>list instead of vector</li>
+<li>rownames</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Vectors</h2></hgroup><article  id="vectors">
+
+<pre class = 'prettyprint lang-r'>identical(c(1), 1) # No scalar type</pre>
+
+<pre >## [1] TRUE</pre>
+
+<pre class = 'prettyprint lang-r'>length(&quot;aaa&quot;) # Use `nchar()` for string length</pre>
+
+<pre >## [1] 1</pre>
+
+<pre class = 'prettyprint lang-r'>s &lt;- &quot;a&quot;; s[5] &lt;- &quot;e&quot;; s # NAs generated</pre>
+
+<pre >## [1] &quot;a&quot; NA  NA  NA  &quot;e&quot;</pre>
+
+<aside class='note'><section><ul>
+<li><code>identical()</code> is the only one way how to test exact equality in R</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Vectors</h2></hgroup><article  id="vectors-1">
+
+<pre class = 'prettyprint lang-r'>c(&quot;aaa&quot;, 1.0, 1) # The most generic type wins</pre>
+
+<pre >## [1] &quot;aaa&quot; &quot;1&quot;   &quot;1&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>as.numeric(c(&quot;aaa&quot;, 1, 1)) # explicitly</pre>
+
+<pre >## Warning: NAs introduced by coercion</pre>
+
+<pre >## [1] NA  1  1</pre>
+
+<ul>
+<li>order: <code>logical</code>, <code>numeric</code>, <code>complex</code>, <code>character</code></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>c(1, c(2, c(3, c(4))), 5) # Always flat</pre>
+
+<pre >## [1] 1 2 3 4 5</pre>
+
+<aside class='note'><section><ul>
+<li>coercion rules are sensible</li>
+<li>use explicit conversion to get what you need</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Vectors</h2></hgroup><article  id="vectors-2">
+
+<ul>
+<li>Type <code>typeof()</code>: logical, integer, double, character (and few more)</li>
+<li>Length <code>length()</code>: number of elements</li>
+<li>Attributes <code>attributes()</code>: metadata</li>
+</ul>
+
+<aside class='note'><section><ul>
+<li>some attributes have special meaning and are used by functions (dim, names, class, &#8230;)</li>
+<li>you can tag your variables with addtional metadata e.g store SQL query, source file name, &#8230;</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Vectorisation</h2></hgroup><article  id="vectorisation">
+
+<ul>
+<li>Almost all functions are vectorised</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>identical(log(c(1, 2)), c(log(1), log(2)))</pre>
+
+<pre >## [1] TRUE</pre>
+
+<ul>
+<li>There are some expections</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>identical(sum(c(1,2),c(3), 4), sum(c(1,2,3,4)))</pre>
+
+<pre >## [1] TRUE</pre>
+
+<pre class = 'prettyprint lang-r'>identical(mean(1,2,3,4), mean(c(1,2,3,4)))</pre>
+
+<pre >## [1] FALSE</pre>
+
+<aside class='note'><section><ul>
+<li>the last one is nasty</li>
+<li>no warning about unused arguments</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Random Walk</h2></hgroup><article  id="random-walk">
+
+<pre class = 'prettyprint lang-r'>walk1 &lt;- function(n) {
+  x &lt;- 0
+  for(i in 2:n) {
+    x[i] &lt;- x[i - 1] + sample(c(-1, 1), 1)
+  }
+  x
+}</pre>
+
+<p><img src="HowToSpeakR_files/figure-html/walkplot.png" title="plot of chunk walkplot" alt="plot of chunk walkplot" width="720" /></p>
+
+</article></slide><slide class=''><hgroup><h2>Random Walk</h2></hgroup><article  id="random-walk-1">
+
+<pre class = 'prettyprint lang-r'>walk1 &lt;- function(n) {
+  x &lt;- 0
+  for(i in 2:n) {
+    x[i] &lt;- x[i - 1] + sample(c(-1, 1), 1)
+  }
+  x
+}</pre>
+
+<ul>
+<li>Preallocate output vector <code>x</code></li>
+</ul>
+
+<aside class='note'><section><ul>
+<li><code>x</code> is growing</li>
+<li><code>x</code> variable is copied inside of the loop</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Random Walk</h2></hgroup><article  id="random-walk-2">
+
+<pre class = 'prettyprint lang-r'>walk2 &lt;- function(n) {
+  x &lt;- numeric(n)
+  for(i in 2:n) {
+    x[i] &lt;- x[i - 1] + sample(c(-1, 1), 1)
+  }
+  x
+}</pre>
+
+<ul>
+<li><code>sample(c(-1, 1)</code> does not depend on <code>i</code></li>
+<li>compute all &quot;steps&quot; before loop</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Random Walk</h2></hgroup><article  id="random-walk-3">
+
+<pre class = 'prettyprint lang-r'>walk3 &lt;- function(n) {
+  x &lt;- sample(c(-1, 1), n, replace = TRUE)
+  for(i in 2:n) {
+    x[i] &lt;- x[i - 1] + x[i]
+  }
+  x
+}</pre>
+
+<ul>
+<li><code>x[i] &lt;- x[i - 1] + x[i]</code> is cumulative sum</li>
+<li>there is a function for it: <code>cumsum()</code></li>
+</ul>
+
+<aside class='note'><section><ul>
+<li>vector modification can create new copy of vector if there is reference</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Random Walk</h2></hgroup><article  id="random-walk-4">
+
+<pre class = 'prettyprint lang-r'>steps &lt;- function(n) sample(c(-1, 1), n, replace = TRUE)
+
+walk4 &lt;- function(n) cumsum(steps(n))</pre>
+
+<pre class = 'prettyprint lang-r'>walk5 &lt;- function(n) Reduce(`+`, steps(n), accumulate = TRUE)</pre>
+
+<ul>
+<li>Vectorised code</li>
+<li>Clear and transparent code</li>
+<li>No loops =&gt; no +1 or -1, zero, one indexing mistakes</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Random Walk - Benchmark</h2></hgroup><article  id="random-walk---benchmark" class="flexbox vcenter">
+
+<p><img src="HowToSpeakR_files/figure-html/randomwalkbench.png" title="plot of chunk randomwalkbench" alt="plot of chunk randomwalkbench" width="720" /></p>
+
+<aside class='note'><section><ul>
+<li>olive - green: growing vector in place</li>
+<li>green - blue: function call prenalty</li>
+<li><code>Reduce()</code>: partialy inplemented in R and then calls <code>vapply()</code></li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Vectorisation</h2></hgroup><article  id="vectorisation-1">
+
+<ul>
+<li>Is <em>not</em> an optimisation technique</li>
+<li>It is a way of thinking</li>
+<li>Use Rcpp for hard problems</li>
+<li>Loop hiding: <code>lapply()</code>, <code>sapply()</code>, <code>vapply()</code>, <code>replicate()</code>, <code>mapply()</code>&#8230;</li>
+<li>Higher-Order Functions: <code>Reduce()</code>, <code>Filter()</code>, <code>Find()</code>, <code>Map()</code>, &#8230;</li>
+<li>Data Summary: <code>aggregate()</code>, <strong>plyr</strong>, <strong>dplyr</strong>, <strong>data.table</strong></li>
+<li>Watch out for <strong>recycling rule</strong></li>
+</ul>
+
+<aside class='note'><section><ul>
+<li><code>*apply</code>: efficient for loops</li>
+<li><code>Map()</code> is identical to <code>mapply()</code></li>
+<li>Learn about <code>data.table</code></li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Recycling</h2></hgroup><article  id="recycling">
+
+<pre class = 'prettyprint lang-r'>1:10 + 1</pre>
+
+<pre >##  [1]  2  3  4  5  6  7  8  9 10 11</pre>
+
+<pre class = 'prettyprint lang-r'>1:10 + 1:2</pre>
+
+<pre >##  [1]  2  4  4  6  6  8  8 10 10 12</pre>
+
+<pre class = 'prettyprint lang-r'>1:10 + c(1,2,1,2,1,2,1,2,1,2)</pre>
+
+<pre >##  [1]  2  4  4  6  6  8  8 10 10 12</pre>
+
+<pre class = 'prettyprint lang-r'>1:10 + 1:3</pre>
+
+<pre >## Warning: longer object length is not a multiple of shorter object length</pre>
+
+<pre >##  [1]  2  4  6  5  7  9  8 10 12 11</pre>
+
+</article></slide><slide class=''><hgroup><h2>R is functional</h2></hgroup><article  id="r-is-functional">
+
+<ul>
+<li>Functions are <strong>first-class</strong> but <strong>lazy</strong> citizens
+
+<ul>
+<li>Function can return function</li>
+<li>Function can be assigned to variable or list</li>
+<li>Function can be passed as an argument</li>
+</ul></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>sum.poly &lt;- function(order) {
+  function(x) sum(x^order)
+}
+
+sum.sq &lt;- sum.poly(2)
+
+apply(data, 1, sum.sq)</pre>
+
+<aside class='note'><section><ul>
+<li>the first one is <code>clousure</code> example (encloses over <code>order</code> argument)</li>
+<li>lazy: function must be called inside of function to be evaluated</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Everything is a function</h2></hgroup><article  id="everything-is-a-function">
+
+<pre class = 'prettyprint lang-r'>identical(`+`(3,4), 3 + 4)</pre>
+
+<pre >## [1] TRUE</pre>
+
+<pre class = 'prettyprint lang-r'>identical(`:`(1, 10), 1:10)</pre>
+
+<pre >## [1] TRUE</pre>
+
+<pre class = 'prettyprint lang-r'>identical(`&lt;-`(a, 5), a &lt;- 5)</pre>
+
+<pre >## [1] TRUE</pre>
+
+<pre class = 'prettyprint lang-r'>x &lt;- 0; identical(`[`(x, 1), x[1])</pre>
+
+<pre >## [1] TRUE</pre>
+
+</article></slide><slide class=''><hgroup><h2>Everything is a function</h2></hgroup><article  id="everything-is-a-function-1">
+
+<ul>
+<li>Count the number of function calls</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>if(a &gt; 5) {
+  print(&quot;`a` is large&quot;)
+} else {
+  print(&quot;`a` is small&quot;)
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2>Everything is a function</h2></hgroup><article  id="everything-is-a-function-2">
+
+<pre class = 'prettyprint lang-r'>`if`(TRUE, &quot;true&quot;, &quot;false&quot;)</pre>
+
+<pre >## [1] &quot;true&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>`for`(i, 1:2, print(i))</pre>
+
+<pre >## [1] 1
+## [1] 2</pre>
+
+<pre class = 'prettyprint lang-r'>`{`(1,2,3)</pre>
+
+<pre >## [1] 3</pre>
+
+<pre class = 'prettyprint lang-r'>`(`(1)</pre>
+
+<pre >## [1] 1</pre>
+
+</article></slide><slide class=''><hgroup><h2>Fibonacci</h2></hgroup><article  id="fibonacci" class="flexbox vcenter">
+
+<p><img src="images/fibonacci.jpg" width="600"/></p>
+
+</article></slide><slide class=''><hgroup><h2>Fibonacci</h2></hgroup><article  id="fibonacci-1" class="build">
+
+<pre class = 'prettyprint lang-r'>fib &lt;- function(n) {
+  if(n &lt; 3) 1
+  else fib(n - 1) + fib(n - 2)
+}</pre>
+
+<ul>
+<li>Repetition <img src="HowToSpeakR_files/figure-html/fib-compute.png" title="plot of chunk fib-compute" alt="plot of chunk fib-compute" width="720" /></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Fibonacci - cache</h2></hgroup><article  id="fibonacci---cache">
+
+<pre class = 'prettyprint lang-r'>fib.ugly &lt;- function(xs) {
+  cache &lt;- new.env(TRUE, emptyenv())
+  
+  fib.n &lt;- function(n) {
+    key &lt;- as.character(n)
+    if(!exists(key, envir = cache, inherits = FALSE)) {
+      val &lt;- if(n &lt; 3) 1 else fib.n(n - 1) + fib.n(n - 2)
+      assign(key, val, envir = cache)
+    }   
+    get(key, envir = cache, inherits = FALSE)
+  }
+  
+  for(i in 1:length(xs)) xs[i] &lt;- fib.n(xs[i])
+  xs  
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2>Fibonacci - memoise</h2></hgroup><article  id="fibonacci---memoise">
+
+<pre class = 'prettyprint lang-r'>fib.m &lt;- memoise(function(n) {
+  if(n &lt; 3) 1
+  else fib.m(n - 1) + fib.m(n - 2)
+})</pre>
+
+</article></slide><slide class=''><hgroup><h2>Fibonacci</h2></hgroup><article  id="fibonacci-2">
+
+<ul>
+<li>Direct computation</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>fib.direct &lt;- function(xs) {
+  alpha &lt;- (1 + sqrt(5))/2
+  round(alpha ^ xs / sqrt(5))
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2>Fibonacci - vectorised</h2></hgroup><article  id="fibonacci---vectorised">
+
+<pre class = 'prettyprint lang-r'>fib.vec &lt;- Vectorize(function (x) {
+  fib.m(x)
+})</pre>
+
+</article></slide><slide class=''><hgroup><h2>Fibonacci - Benchmark</h2></hgroup><article  id="fibonacci---benchmark" class="flexbox vcenter">
+
+<p><img src="HowToSpeakR_files/figure-html/fibbench.png" title="plot of chunk fibbench" alt="plot of chunk fibbench" width="720" /></p>
+
+</article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem">
+
+<ul>
+<li>Maximise value of items</li>
+<li>but do not exceed the limit</li>
+</ul>
+
+<p><img src="images/knapsack.png" width="400"/></p>
+
+</article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem-1">
+
+<pre class = 'prettyprint lang-r'>knapsack &lt;- function(items, w) {
+  max &lt;- c(0, w)
+  bag &lt;- function(x) c(sum(items$v[x]), sum(items$w[x]))
+  # generate all combinations
+  for(i in 1:nrow(items)) {
+    res &lt;- t(combn(nrow(items), i, bag))
+    # remove comb. which exceeds max weight
+    res &lt;- res[res[, 2] &lt;= w, , drop = FALSE]
+    if(nrow(res) &gt;= 1 &amp; max[1] &lt; res[1]) {
+      # best item
+      max &lt;- res[order(res[, 1], decreasing = TRUE)[1], ]
+    }
+  }
+  max[1]
+}</pre>
+
+<ul>
+<li>Inefficient</li>
+<li>Dynamic programming problem</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem-2">
+
+<pre class = 'prettyprint lang-r'>knapsack.dp &lt;- function(items, w) {
+  m_new &lt;- m &lt;- rep.int(0, w + 1)
+
+  for(i in 1:nrow(items)) {
+    for(j in 0:w) {
+      if(items$w[i] &lt;= j) {
+        m_new[j + 1] &lt;- max(m[j + 1], m[j + 1 - items$w[i]] + items$v[i])
+      } else {
+        m_new[j + 1] &lt;- m[j + 1]
+      }
+    }
+    m &lt;- m_new
+  }
+  m[w + 1]
+}</pre>
+
+<ul>
+<li>Loops and indexing issues</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem-3">
+
+<pre class = 'prettyprint lang-r'>knapsack.dp2 &lt;- function(items, w) {
+  m &lt;- rep.int(0, w + 1)
+
+  for(i in 1:nrow(items)) {
+    m &lt;- ifelse(
+      items$w[i] &lt;= 0:w, # cond
+      pmax(m, m[pmax(1, 0:w + 1 - items$w[i])] + items$v[i]), # true
+      m # false
+    )
+  }
+  m[w + 1]
+}</pre>
+
+<ul>
+<li>Vectorised <code>if</code> is hard to understand</li>
+<li><code>for</code> loop is hard to vectorise (due to <code>m</code> variable)</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem-4">
+
+<pre class = 'prettyprint lang-r'>knapsack.mem &lt;- function(items, w) {
+  solve &lt;- memoise(function(i, j) {
+    if(min(i, j) &lt;= 0) 0
+    else if(items$w[i] &gt; j) solve(i - 1, j)
+    else max(solve(i - 1, j), items$v[i] + solve(i - 1, j - items$w[i]))
+  })
+
+  solve(nrow(items), w)
+}</pre>
+
+<pre class = 'prettyprint lang-r'>knapsack.rec &lt;- function(items, w) {
+  solve &lt;- function(i, j) {
+    ...
+  }
+  solve(nrow(items), w)
+}</pre>
+
+</article></slide><slide class=''><hgroup><h2>Knpasack Problem - Benchmark</h2></hgroup><article  id="knpasack-problem---benchmark" class="flexbox vcenter">
+
+<p><img src="HowToSpeakR_files/figure-html/knapsackbench.png" title="plot of chunk knapsackbench" alt="plot of chunk knapsackbench" width="720" /></p>
+
+</article></slide><slide class=''><hgroup><h2>Resources &amp; Credits</h2></hgroup><article  id="resources-credits">
+
+<ul>
+<li><a href='http://www.burns-stat.com/documents/books/the-r-inferno/' title=''>R Inferno</a> (Patrick Burns)</li>
+<li><a href='http://adv-r.had.co.nz/' title=''>Advanced R</a> (Hadley Wickham)</li>
+<li><a href='http://www.johndcook.com/R_language_for_programmers.html' title=''>R language for programmers</a> (John D. Cook)</li>
+<li><a href='http://dill.github.io/talks/rusers-functional/talk.html' title=''>Functional programming in R</a> (David L Miller)</li>
+<li><a href='http://www.slideshare.net/DASpringate/functional-programming-in-r' title=''>Functional programming in R</a> (David Springate)</li>
+<li><a href='http://www.noamross.net/blog/2014/4/16/vectorization-in-r--why.html' title=''>Vectorization in R: Why?</a> (Noam Ross)</li>
+<li><a href='http://www.johnmyleswhite.com/notebook/2013/01/24/writing-better-statistical-programs-in-r/' title=''>Writing Better Statistical Programs in R</a> (John Myles White)</li>
+<li><a href='r.cs.purdue.edu/pub/ecoop12.pdf' title=''>Evaluating the Design of the R Language</a></li>
+</ul></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script src="HowToSpeakR_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+<script src="HowToSpeakR_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+<script src="HowToSpeakR_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+<script src="HowToSpeakR_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+<script src="HowToSpeakR_files/ioslides-13.5.1/js/hammer.js"></script>
+<script src="HowToSpeakR_files/ioslides-13.5.1/js/slide-controller.js"></script>
+<script src="HowToSpeakR_files/ioslides-13.5.1/js/slide-deck.js"></script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
