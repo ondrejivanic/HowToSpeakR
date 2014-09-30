@@ -196,9 +196,7 @@ dump(&quot;df&quot;, &quot;&quot;)</pre>
 
 <pre >## [1] &quot;a&quot; NA  NA  NA  &quot;e&quot;</pre>
 
-<aside class='note'><section><ul>
-<li><code>identical()</code> is the only one way how to test exact equality in R</li>
-</ul></section></aside>
+<aside class='note'><section></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Vectors</h2></hgroup><article  id="vectors-1">
 
@@ -261,7 +259,9 @@ dump(&quot;df&quot;, &quot;&quot;)</pre>
 <pre >## [1] FALSE</pre>
 
 <aside class='note'><section><ul>
-<li>the last one is nasty</li>
+<li><code>identical()</code> is the only one way how to test exact equality in R</li>
+<li>but 2L != 2, &#8230;</li>
+<li>the last two are nasty</li>
 <li>no warning about unused arguments</li>
 </ul></section></aside>
 
@@ -276,6 +276,10 @@ dump(&quot;df&quot;, &quot;&quot;)</pre>
 }</pre>
 
 <p><img src="HowToSpeakR_files/figure-html/walkplot.png" title="plot of chunk walkplot" alt="plot of chunk walkplot" width="720" /></p>
+
+<aside class='note'><section><ul>
+<li>How we can make it better?</li>
+</ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Random Walk</h2></hgroup><article  id="random-walk-1">
 
@@ -294,6 +298,7 @@ dump(&quot;df&quot;, &quot;&quot;)</pre>
 <aside class='note'><section><ul>
 <li><code>x</code> is growing</li>
 <li><code>x</code> variable is copied inside of the loop</li>
+<li>quadratic complecity</li>
 </ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Random Walk</h2></hgroup><article  id="random-walk-2">
@@ -310,6 +315,8 @@ dump(&quot;df&quot;, &quot;&quot;)</pre>
 <li><code>sample(c(-1, 1)</code> does not depend on <code>i</code></li>
 <li>compute all &quot;steps&quot; before loop</li>
 </ul>
+
+<aside class='note'><section><code>sample()</code> is called within the loop but doesn&#39;t use <code>i</code></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Random Walk</h2></hgroup><article  id="random-walk-3">
 
@@ -344,6 +351,14 @@ walk4 &lt;- function(n) cumsum(steps(n))</pre>
 <li>No loops =&gt; no +1 or -1, zero, one indexing mistakes</li>
 </ul>
 
+<aside class='note'><section><ul>
+<li>Easy to parametrise: different &quot;init&quot;&quot; and &quot;step&quot; functions</li>
+<li>Easy to reason about it</li>
+<li><code>+</code> is a function</li>
+<li><code>Reduce()</code> can you any function with two arguments</li>
+<li><code>Reduce()</code>: partialy inplemented in R and then calls <code>vapply()</code></li>
+</ul></section></aside>
+
 </article></slide><slide class=''><hgroup><h2>Random Walk - Benchmark</h2></hgroup><article  id="random-walk---benchmark" class="flexbox vcenter">
 
 <p><img src="HowToSpeakR_files/figure-html/randomwalkbench.png" title="plot of chunk randomwalkbench" alt="plot of chunk randomwalkbench" width="720" /></p>
@@ -351,7 +366,7 @@ walk4 &lt;- function(n) cumsum(steps(n))</pre>
 <aside class='note'><section><ul>
 <li>olive - green: growing vector in place</li>
 <li>green - blue: function call prenalty</li>
-<li><code>Reduce()</code>: partialy inplemented in R and then calls <code>vapply()</code></li>
+<li>maybe readable code is a fast code as well</li>
 </ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Vectorisation</h2></hgroup><article  id="vectorisation-1">
@@ -369,28 +384,28 @@ walk4 &lt;- function(n) cumsum(steps(n))</pre>
 <aside class='note'><section><ul>
 <li><code>*apply</code>: efficient for loops</li>
 <li><code>Map()</code> is identical to <code>mapply()</code></li>
-<li>Learn about <code>data.table</code></li>
+<li>Start with <code>data.table</code>, then <code>dplyr</code></li>
 </ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Recycling</h2></hgroup><article  id="recycling">
 
-<pre class = 'prettyprint lang-r'>1:10 + 1</pre>
+<pre class = 'prettyprint lang-r'>1:6 + 1</pre>
 
-<pre >##  [1]  2  3  4  5  6  7  8  9 10 11</pre>
+<pre >## [1] 2 3 4 5 6 7</pre>
 
-<pre class = 'prettyprint lang-r'>1:10 + 1:2</pre>
+<pre class = 'prettyprint lang-r'>all((1:6 + 1:2) == (1:6 + c(1,2, 1,2, 1,2)))</pre>
 
-<pre >##  [1]  2  4  4  6  6  8  8 10 10 12</pre>
+<pre >## [1] TRUE</pre>
 
-<pre class = 'prettyprint lang-r'>1:10 + c(1,2,1,2,1,2,1,2,1,2)</pre>
-
-<pre >##  [1]  2  4  4  6  6  8  8 10 10 12</pre>
-
-<pre class = 'prettyprint lang-r'>1:10 + 1:3</pre>
+<pre class = 'prettyprint lang-r'>1:6 + 1:5</pre>
 
 <pre >## Warning: longer object length is not a multiple of shorter object length</pre>
 
-<pre >##  [1]  2  4  6  5  7  9  8 10 12 11</pre>
+<pre >## [1]  2  4  6  8 10  7</pre>
+
+<aside class='note'><section><ul>
+<li>Maybe, only the first one makes sense</li>
+</ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>R is functional</h2></hgroup><article  id="r-is-functional">
 
@@ -435,6 +450,10 @@ apply(data, 1, sum.sq)</pre>
 
 <pre >## [1] TRUE</pre>
 
+<aside class='note'><section><ul>
+<li>All functions can be redefined</li>
+</ul></section></aside>
+
 </article></slide><slide class=''><hgroup><h2>Everything is a function</h2></hgroup><article  id="everything-is-a-function-1">
 
 <ul>
@@ -446,6 +465,10 @@ apply(data, 1, sum.sq)</pre>
 } else {
   print(&quot;`a` is small&quot;)
 }</pre>
+
+<aside class='note'><section><ul>
+<li>if you see more than two then you know quite lot about R</li>
+</ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Everything is a function</h2></hgroup><article  id="everything-is-a-function-2">
 
@@ -466,6 +489,10 @@ apply(data, 1, sum.sq)</pre>
 
 <pre >## [1] 1</pre>
 
+<aside class='note'><section><ul>
+<li>Again, you can redefine thouse functions</li>
+</ul></section></aside>
+
 </article></slide><slide class=''><hgroup><h2>Fibonacci</h2></hgroup><article  id="fibonacci" class="flexbox vcenter">
 
 <p><img src="images/fibonacci.jpg" width="600"/></p>
@@ -481,30 +508,50 @@ apply(data, 1, sum.sq)</pre>
 <li>Repetition <img src="HowToSpeakR_files/figure-html/fib-compute.png" title="plot of chunk fib-compute" alt="plot of chunk fib-compute" width="720" /></li>
 </ul>
 
+<aside class='note'><section><ul>
+<li>repetition: for 5 you need 4 and 3; for 4 you need 3 and 2; &#8230;</li>
+<li>use cache, for example vector / list</li>
+<li>vectorisation might be useful</li>
+</ul></section></aside>
+
 </article></slide><slide class=''><hgroup><h2>Fibonacci - cache</h2></hgroup><article  id="fibonacci---cache">
 
 <pre class = 'prettyprint lang-r'>fib.ugly &lt;- function(xs) {
-  cache &lt;- new.env(TRUE, emptyenv())
+  cache &lt;- rep(NA, max(xs))
   
   fib.n &lt;- function(n) {
-    key &lt;- as.character(n)
-    if(!exists(key, envir = cache, inherits = FALSE)) {
-      val &lt;- if(n &lt; 3) 1 else fib.n(n - 1) + fib.n(n - 2)
-      assign(key, val, envir = cache)
+    if(is.na(cache[n])) {
+      cache[n] &lt;&lt;- fib(n)
     }   
-    get(key, envir = cache, inherits = FALSE)
+    cache[n]
   }
   
   for(i in 1:length(xs)) xs[i] &lt;- fib.n(xs[i])
   xs  
 }</pre>
 
-</article></slide><slide class=''><hgroup><h2>Fibonacci - memoise</h2></hgroup><article  id="fibonacci---memoise">
+<aside class='note'><section><ul>
+<li>describe this &quot;ugly&quot; function</li>
+<li>you are not the first one who wrote code like this</li>
+<li>there must be something for caching and <code>for</code> loop replacement</li>
+</ul></section></aside>
+
+</article></slide><slide class=''><hgroup><h2>Fibonacci - improvements</h2></hgroup><article  id="fibonacci---improvements">
 
 <pre class = 'prettyprint lang-r'>fib.m &lt;- memoise(function(n) {
   if(n &lt; 3) 1
   else fib.m(n - 1) + fib.m(n - 2)
 })</pre>
+
+<pre class = 'prettyprint lang-r'>fib.vec &lt;- Vectorize(function (x) {
+  fib.m(x)
+})</pre>
+
+<aside class='note'><section><ul>
+<li>it&#39;s crystal clear!</li>
+<li>I want to re-use previous work</li>
+<li>I want to be able to pass vector as argument</li>
+</ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Fibonacci</h2></hgroup><article  id="fibonacci-2">
 
@@ -517,15 +564,17 @@ apply(data, 1, sum.sq)</pre>
   round(alpha ^ xs / sqrt(5))
 }</pre>
 
-</article></slide><slide class=''><hgroup><h2>Fibonacci - vectorised</h2></hgroup><article  id="fibonacci---vectorised">
-
-<pre class = 'prettyprint lang-r'>fib.vec &lt;- Vectorize(function (x) {
-  fib.m(x)
-})</pre>
+<aside class='note'><section><ul>
+<li>using z-transform</li>
+</ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Fibonacci - Benchmark</h2></hgroup><article  id="fibonacci---benchmark" class="flexbox vcenter">
 
 <p><img src="HowToSpeakR_files/figure-html/fibbench.png" title="plot of chunk fibbench" alt="plot of chunk fibbench" width="720" /></p>
+
+<aside class='note'><section><ul>
+<li>the <code>ugly()</code> goes over 1s second</li>
+</ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem">
 
@@ -535,6 +584,8 @@ apply(data, 1, sum.sq)</pre>
 </ul>
 
 <p><img src="images/knapsack.png" width="400"/></p>
+
+<aside class='note'><section></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem-1">
 
@@ -559,6 +610,11 @@ apply(data, 1, sum.sq)</pre>
 <li>Dynamic programming problem</li>
 </ul>
 
+<aside class='note'><section><ul>
+<li>naive solution</li>
+<li>we learned that ugly code is not fast</li>
+</ul></section></aside>
+
 </article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem-2">
 
 <pre class = 'prettyprint lang-r'>knapsack.dp &lt;- function(items, w) {
@@ -581,6 +637,12 @@ apply(data, 1, sum.sq)</pre>
 <li>Loops and indexing issues</li>
 </ul>
 
+<aside class='note'><section><ul>
+<li>wikipedia to rescue</li>
+<li>R starts from 1 hence it takes you 20 minutes to get indenxing right</li>
+<li>two loops + <code>if</code> =&gt; vectorise inner loop</li>
+</ul></section></aside>
+
 </article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem-3">
 
 <pre class = 'prettyprint lang-r'>knapsack.dp2 &lt;- function(items, w) {
@@ -601,6 +663,10 @@ apply(data, 1, sum.sq)</pre>
 <li><code>for</code> loop is hard to vectorise (due to <code>m</code> variable)</li>
 </ul>
 
+<aside class='note'><section><ul>
+<li>can we re-use what we learned so far?</li>
+</ul></section></aside>
+
 </article></slide><slide class=''><hgroup><h2>Knpasack Problem</h2></hgroup><article  id="knpasack-problem-4">
 
 <pre class = 'prettyprint lang-r'>knapsack.mem &lt;- function(items, w) {
@@ -620,22 +686,34 @@ apply(data, 1, sum.sq)</pre>
   solve(nrow(items), w)
 }</pre>
 
+<aside class='note'><section><ul>
+<li>add one item at the time and reuse previous results</li>
+</ul></section></aside>
+
 </article></slide><slide class=''><hgroup><h2>Knpasack Problem - Benchmark</h2></hgroup><article  id="knpasack-problem---benchmark" class="flexbox vcenter">
 
 <p><img src="HowToSpeakR_files/figure-html/knapsackbench.png" title="plot of chunk knapsackbench" alt="plot of chunk knapsackbench" width="720" /></p>
+
+<aside class='note'><section><ul>
+<li>imperative: two <code>for</code> loops + if</li>
+<li>vectorised: <code>ifelse</code></li>
+<li></li>
+</ul></section></aside>
 
 </article></slide><slide class=''><hgroup><h2>Resources &amp; Credits</h2></hgroup><article  id="resources-credits">
 
 <ul>
 <li><a href='http://www.burns-stat.com/documents/books/the-r-inferno/' title=''>R Inferno</a> (Patrick Burns)</li>
 <li><a href='http://adv-r.had.co.nz/' title=''>Advanced R</a> (Hadley Wickham)</li>
+<li><a href='r.cs.purdue.edu/pub/ecoop12.pdf' title=''>Evaluating the Design of the R Language</a></li>
+<li><a href='http://www.johnmyleswhite.com/notebook/2013/01/24/writing-better-statistical-programs-in-r/' title=''>Writing Better Statistical Programs in R</a> (John Myles White)</li>
 <li><a href='http://www.johndcook.com/R_language_for_programmers.html' title=''>R language for programmers</a> (John D. Cook)</li>
 <li><a href='http://dill.github.io/talks/rusers-functional/talk.html' title=''>Functional programming in R</a> (David L Miller)</li>
 <li><a href='http://www.slideshare.net/DASpringate/functional-programming-in-r' title=''>Functional programming in R</a> (David Springate)</li>
 <li><a href='http://www.noamross.net/blog/2014/4/16/vectorization-in-r--why.html' title=''>Vectorization in R: Why?</a> (Noam Ross)</li>
-<li><a href='http://www.johnmyleswhite.com/notebook/2013/01/24/writing-better-statistical-programs-in-r/' title=''>Writing Better Statistical Programs in R</a> (John Myles White)</li>
-<li><a href='r.cs.purdue.edu/pub/ecoop12.pdf' title=''>Evaluating the Design of the R Language</a></li>
-</ul></article></slide>
+</ul>
+
+<aside class='note'><section></section></aside></article></slide>
 
 
   <slide class="backdrop"></slide>
