@@ -105,7 +105,6 @@ s <- "a"; s[5] <- "e"; s # NAs generated
 ```
 
 <div class="notes">
-- `identical()` is the only one way how to test exact equality in R
 </div>
 
 ## Vectors
@@ -151,14 +150,15 @@ identical(mean(1,2,3,4), mean(c(1,2,3,4)))
 ```
 
 <div class="notes">
-- the last one is nasty
+- `identical()` is the only one way how to test exact equality in R
+- but 2L != 2, ...
+- the last two are nasty
 - no warning about unused arguments
 </div>
 
 ## Random Walk
 ```{r walk1, eval=FALSE}
 ```
-
 ```{r walkplot, echo=FALSE, fig.height=3.5}
 plot(
   1:100,
@@ -169,23 +169,32 @@ plot(
 )
 ```
 
+<div class="notes">
+- How we can make it better?
+</div>
+
+
 ## Random Walk
 ```{r walk1, eval=FALSE}
 ```
-
 - Preallocate output vector `x`
 
 <div class="notes">
 - `x` is growing
 - `x` variable is copied inside of the loop
+- quadratic complecity
 </div>
 
 ## Random Walk
 ```{r walk2, eval=FALSE}
 ```
-
 - `sample(c(-1, 1)` does not depend on `i`
 - compute all "steps" before loop
+
+<div class="notes">
+`sample()` is called within the loop but doesn't use `i`
+</div>
+
 
 ## Random Walk
 ```{r walk3, eval=FALSE}
@@ -211,6 +220,15 @@ plot(
 - Clear and transparent code
 - No loops => no +1 or -1, zero, one indexing mistakes
 
+<div class="notes">
+- Easy to parametrise: different "init"" and "step" functions
+- Easy to reason about it
+- `+` is a function
+- `Reduce()` can you any function with two arguments
+- `Reduce()`: partialy inplemented in R and then calls `vapply()`
+
+</div>
+
 ## Random Walk - Benchmark {.flexbox .vcenter}
 ```{r, randomwalkbench, cache=TRUE, echo=FALSE, message=FALSE}
 source("randomwalk-bench.R")
@@ -225,7 +243,7 @@ ggplot(bench.result) +
 <div class="notes">
 - olive - green: growing vector in place
 - green - blue: function call prenalty
-- `Reduce()`: partialy inplemented in R and then calls `vapply()`
+- maybe readable code is a fast code as well
 </div>
 
 ## Vectorisation
@@ -240,16 +258,19 @@ ggplot(bench.result) +
 <div class="notes">
 - `*apply`: efficient for loops
 - `Map()` is identical to `mapply()`
-- Learn about `data.table`
+- Start with `data.table`, then `dplyr`
 </div>
 
 ## Recycling
 ```{r}
-1:10 + 1
-1:10 + 1:2
-1:10 + c(1,2,1,2,1,2,1,2,1,2)
-1:10 + 1:3
+1:6 + 1
+all((1:6 + 1:2) == (1:6 + c(1,2, 1,2, 1,2)))
+1:6 + 1:5
 ```
+
+<div class="notes">
+- Maybe, only the first one makes sense
+</div>
 
 ## R is functional
 - Functions are **first-class** but **lazy** citizens
@@ -281,6 +302,10 @@ identical(`<-`(a, 5), a <- 5)
 x <- 0; identical(`[`(x, 1), x[1])
 ```
 
+<div class="notes">
+- All functions can be redefined
+</div>
+
 ## Everything is a function
 
 - Count the number of function calls
@@ -292,6 +317,10 @@ if(a > 5) {
 }
 ```
 
+<div class="notes">
+- if you see more than two then you know quite lot about R
+</div>
+
 ## Everything is a function
 
 ```{r}
@@ -300,6 +329,10 @@ if(a > 5) {
 `{`(1,2,3)
 `(`(1)
 ```
+
+<div class="notes">
+- Again, you can redefine thouse functions
+</div>
 
 ## Fibonacci {.flexbox .vcenter}
 <img src="images/fibonacci.jpg" width="600"/>
@@ -312,29 +345,49 @@ if(a > 5) {
 library(igraph)
 source("fib.R")
 g <- graph.empty() +
-  vertices(fib.direct(1:5), color="black") +
+  vertices(1:5, color="black") +
   edges(c(2,1, 3,1, 3,2, 4,2, 4,3, 5,3, 5,4), color="black")
 
 par(mar = rep(0, 4))
 plot(g, vertex.size = 60, vertex.color="white", vertex.label.color="red")
 ```
 
+<div class="notes">
+- repetition: for 5 you need 4 and 3; for 4 you need 3 and 2; ...
+- use cache, for example vector / list
+- vectorisation might be useful
+</div>
+
 ## Fibonacci - cache
 ```{r, fib.ugly}
 ```
 
-## Fibonacci - memoise
+<div class="notes">
+- describe this "ugly" function
+- you are not the first one who wrote code like this
+- there must be something for caching and `for` loop replacement
+</div>
+
+## Fibonacci - improvements
 ```{r, fib.m}
 ```
+```{r, fib.vec}
+```
+
+<div class="notes">
+- it's crystal clear!
+- I want to re-use previous work
+- I want to be able to pass vector as argument
+</div>
 
 ## Fibonacci
 - Direct computation
 ```{r, fib.direct, evel=FALSE}
 ```
 
-## Fibonacci - vectorised
-```{r, fib.vec}
-```
+<div class="notes">
+- using z-transform
+</div>
 
 ## Fibonacci - Benchmark {.flexbox .vcenter}
 ```{r, fibbench, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
@@ -349,11 +402,18 @@ ggplot(bench.result) +
   theme_bw()
 ```
 
+<div class="notes">
+- the `ugly()` goes over 1s second
+</div>
+
 ## Knpasack Problem
 - Maximise value of items
 - but do not exceed the limit
 
 <img src="images/knapsack.png" width="400"/>
+
+<div class="notes">
+</div>
 
 ## Knpasack Problem
 ```{r, knapsack1}
@@ -361,16 +421,31 @@ ggplot(bench.result) +
 - Inefficient
 - Dynamic programming problem
 
+<div class="notes">
+- naive solution
+- we learned that ugly code is not fast
+</div>
+
 ## Knpasack Problem
 ```{r, knapsack2}
 ```
 - Loops and indexing issues
+
+<div class="notes">
+- wikipedia to rescue
+- R starts from 1 hence it takes you 20 minutes to get indenxing right
+- two loops + `if` => vectorise inner loop
+</div>
 
 ## Knpasack Problem
 ```{r, knapsack3}
 ```
 - Vectorised `if` is hard to understand
 - `for` loop is hard to vectorise (due to `m` variable)
+
+<div class="notes">
+- can we re-use what we learned so far?
+</div>
 
 ## Knpasack Problem
 ```{r, knapsack4}
@@ -385,6 +460,10 @@ knapsack.rec <- function(items, w) {
 }
 ```
 
+<div class="notes">
+- add one item at the time and reuse previous results
+</div>
+
 ## Knpasack Problem - Benchmark  {.flexbox .vcenter}
 ```{r, knapsackbench, cache=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 source("knapsack-bench.R")
@@ -397,12 +476,22 @@ ggplot(bench.result) +
   theme_bw()
 ```
 
+<div class="notes">
+- imperative: two `for` loops + if
+- vectorised: `ifelse`
+- 
+</div>
+
 ## Resources & Credits
 - [R Inferno](http://www.burns-stat.com/documents/books/the-r-inferno/) (Patrick Burns)
 - [Advanced R](http://adv-r.had.co.nz/) (Hadley Wickham)
+- [Evaluating the Design of the R Language](r.cs.purdue.edu/pub/ecoop12.pdf)
+- [Writing Better Statistical Programs in R](http://www.johnmyleswhite.com/notebook/2013/01/24/writing-better-statistical-programs-in-r/) (John Myles White)
 - [R language for programmers](http://www.johndcook.com/R_language_for_programmers.html) (John D. Cook)
 - [Functional programming in R](http://dill.github.io/talks/rusers-functional/talk.html) (David L Miller)
 - [Functional programming in R](http://www.slideshare.net/DASpringate/functional-programming-in-r) (David Springate)
 - [Vectorization in R: Why?](http://www.noamross.net/blog/2014/4/16/vectorization-in-r--why.html) (Noam Ross)
-- [Writing Better Statistical Programs in R](http://www.johnmyleswhite.com/notebook/2013/01/24/writing-better-statistical-programs-in-r/) (John Myles White)
-- [Evaluating the Design of the R Language](r.cs.purdue.edu/pub/ecoop12.pdf)
+
+<div class="notes">
+</div>
+
